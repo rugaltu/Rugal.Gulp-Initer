@@ -2,7 +2,7 @@ class GulpIniterTool {
     constructor() {
         this.Folders = {};
         this.Gulp = require('gulp');
-        this.Clean = require('gulp-clean');
+        this.Clean = require('rimraf').rimraf;
         this.IsUseClear = true;
         this.SourceRoot = 'node_modules';
         this.TargetRoot = 'wwwroot/npm';
@@ -56,7 +56,6 @@ class GulpIniterTool {
     }
 
     InitTask() {
-
         if (this.IsUseClear)
             this._NewClearTask();
 
@@ -89,9 +88,9 @@ class GulpIniterTool {
     //#region Private Process
     _NewClearTask() {
         let TaskName = `clean-${this.TargetRoot}`;
-        this.Gulp.task(TaskName, () => {
-            this.Gulp.src(this.TargetRoot, { read: false })
-                .pipe(this.Clean());
+        this.Gulp.task(TaskName, async (done) => {
+            await this.Clean(this.TargetRoot);
+            done();
         });
         return this;
     }
@@ -103,6 +102,6 @@ class GulpIniterTool {
     }
     //#endregion
 }
-
 const GulpIniter = new GulpIniterTool();
+
 module.exports = GulpIniter;
