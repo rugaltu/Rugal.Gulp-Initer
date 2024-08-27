@@ -22,7 +22,7 @@ Default source/target root path is ```node_modules``` and ```wwwroot/npm```
 ```js
 Initer
     .WithSourceRoot('node_modules')
-    .WithSourceRoot('wwwroot/npm');
+    .WithTargetRoot('wwwroot/npm');
 ```
 
 ---
