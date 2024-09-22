@@ -1,10 +1,5 @@
-﻿//const gulp = require('gulp');
-//const del = require('rimraf');
+﻿
+//const Initer = new GulpIniter();
 
-
-//const GulpIniter = new GulpIniterTool();
-
-//GulpIniter.AddFolder_Js('gulp')
-//    .InitTask();
-     
-
+Initer.AddFolder_Js('gulp')
+    .InitTask();

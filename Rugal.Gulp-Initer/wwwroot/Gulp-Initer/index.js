@@ -1,4 +1,4 @@
-class GulpIniterTool {
+class GulpIniter {
     constructor() {
         this.Folders = {};
         this.Gulp = require('gulp');
@@ -23,35 +23,42 @@ class GulpIniterTool {
         return this;
     }
 
-    _BaseAddConfig(SourcePath, TargetPath, Type) {
-        TargetPath ??= SourcePath;
-
+    _BaseAddConfig(SourcePath, Option) {
+        Option.TargetPath ??= SourcePath;
+        Option.TargetPath = this._TrimPath(Option.TargetPath);
         SourcePath = this._TrimPath(SourcePath);
-        TargetPath = this._TrimPath(TargetPath);
-
-        this.Folders[TargetPath] = {
-            Path: SourcePath,
-            Type,
-        };
+        this.Folders[SourcePath] = Option;
     }
 
-    AddFolder(SourcePath, TargetPath = null, Type = '*') {
-        this._BaseAddConfig(SourcePath, TargetPath, Type);
+    AddFolder(SourcePath, Option = {
+        TargetPath: null,
+        Type: '*',
+    }) {
+        this._BaseAddConfig(SourcePath, Option);
         return this;
     }
 
-    AddFolder_Js(SourcePath, TargetPath = null) {
-        this._BaseAddConfig(SourcePath, TargetPath, '*.js');
+    AddFolder_Js(SourcePath, Option = {
+        TargetPath: null,
+        Type: '*.js',
+    }) {
+        this._BaseAddConfig(SourcePath, Option);
         return this;
     }
 
-    AddFolder_Css(SourcePath, TargetPath = null) {
-        this._BaseAddConfig(SourcePath, TargetPath, '*.css');
+    AddFolder_Css(SourcePath, Option = {
+        TargetPath: null,
+        Type: '*.css',
+    }) {
+        this._BaseAddConfig(SourcePath, Option);
         return this;
     }
 
-    AddFolder_Ts(SourcePath, TargetPath = null) {
-        this._BaseAddConfig(SourcePath, TargetPath, '*.ts');
+    AddFolder_Ts(SourcePath, Option = {
+        TargetPath: null,
+        Type: '*.ts',
+    }) {
+        this._BaseAddConfig(SourcePath, Option);
         return this;
     }
 
@@ -60,20 +67,16 @@ class GulpIniterTool {
             this._NewClearTask();
 
         let TaskNames = Object.keys(this.Folders)
-            .map(Target => {
-                let Source = this.Folders[Target];
-                return {
-                    Target,
-                    ...Source,
-                };
-            })
-            .map(Item => {
-                let TaskName = `copy-${Item.Path}`;
+            .map(SourcePath => {
+                let Item = this.Folders[SourcePath];
+                let TaskName = `copy-${SourcePath}`;
                 this.Gulp.task(TaskName, done => {
-                    let SourcePath = `${this.SourceRoot}/${Item.Path}/**/${Item.Type}`;
-                    let TargetPath = `${this.TargetRoot}/${Item.Target}`;
+                    let SourcePath = `${this.SourceRoot}/${SourcePath}/**/${Item.Type}`;
+                    let TargetPath = `${this.TargetRoot}/${Item.TargetPath}`;
                     this.Gulp
-                        .src(SourcePath)
+                        .src(SourcePath, {
+                            ...Item
+                        })
                         .pipe(this.Gulp.dest(TargetPath));
                     done();
                 });
@@ -102,6 +105,6 @@ class GulpIniterTool {
     }
     //#endregion
 }
-const GulpIniter = new GulpIniterTool();
+const Initer = new GulpIniter();
 
-module.exports = GulpIniter;
+module.exports = Initer;
