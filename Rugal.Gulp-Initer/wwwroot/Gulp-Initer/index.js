@@ -26,6 +26,7 @@ class GulpIniter {
     _BaseAddConfig(SourcePath, Option) {
         Option.TargetPath ??= SourcePath;
         Option.TargetPath = this._TrimPath(Option.TargetPath);
+        Option.Type ??= '*';
         SourcePath = this._TrimPath(SourcePath);
         this.Folders[SourcePath] = Option;
     }
