@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Remove="node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\Gulp-Initer\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
