@@ -3,9 +3,11 @@ const gulp = require('gulp');
 const { rimraf } = require('rimraf');
 class GulpIniter {
     Folders = {};
+    Deletes = {};
     IsUseClear = true;
     SourceRoot = 'node_modules';
     TargetRoot = 'wwwroot/npm'
+    DeleteRoot = 'wwwroot';
     constructor() {
 
     }
@@ -17,6 +19,11 @@ class GulpIniter {
 
     WithTargetRoot(RootPath) {
         this.TargetRoot = RootPath;
+        return this;
+    }
+
+    WithDeleteRoot(RootPath) {
+        this.DeleteRoot = RootPath;
         return this;
     }
 
@@ -65,9 +72,35 @@ class GulpIniter {
         return this;
     }
 
+    AddDelete(DeletePath, DeleteOption = {
+        RootPath: null,
+    }) {
+        DeletePath = this.$TrimPath(DeletePath);
+        this.Deletes[DeletePath] = {
+            TargetPath: DeletePath,
+            RootPath: this.$TrimPath(DeleteOption.RootPath),
+        };
+        return this;
+    }
+
     InitTask() {
         if (this.IsUseClear)
             this.$NewClearTask();
+
+        let DeleteKeys = Object.keys(this.Deletes);
+        if (DeleteKeys.length > 0) {
+            for (let i = 0; i < DeleteKeys.length; i++) {
+                let Key = DeleteKeys[i];
+                let DeleteConfig = this.Deletes[Key];
+                let RootPath = DeleteConfig.RootPath ?? this.DeleteRoot;
+                let FullPath = `${RootPath}/${DeleteConfig.TargetPath}`;
+                let TaskName = `delete-${Key}`;
+                gulp.task(TaskName, async done => {
+                    await rimraf(FullPath);
+                    done();
+                });
+            }
+        }
 
         let TaskNames = Object.keys(this.Folders)
             .map(SourcePath => {
@@ -100,6 +133,8 @@ class GulpIniter {
     }
 
     $TrimPath(Path) {
+        if (Path == null)
+            return null;
         let TrimPattern = /^[\/\\]+/;
         Path = Path.replace(TrimPattern, '');
         return Path;
