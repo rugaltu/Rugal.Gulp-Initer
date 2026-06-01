@@ -1,0 +1,23 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "strictNullChecks": false,
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "declaration": true, // NOTE: true = export type
+    "emitDeclarationOnly": false,
+    "removeComments": false,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "paths": { // NOTE: put project types path in here
+      "gulpIniter": [ "./wwwroot/gulp-Initer/src/gulpIniter.ts" ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+  ],
+  "charset": "utf8"
+}

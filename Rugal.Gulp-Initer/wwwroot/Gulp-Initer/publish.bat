@@ -1,5 +1,5 @@
-
+@echo off
 echo "publish start"
-npm publish
+call npm publish
 echo "publish finish"
 pause
